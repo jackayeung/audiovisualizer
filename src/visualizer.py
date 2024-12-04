@@ -1,13 +1,25 @@
-import matplotlib.pyplot as plt
+import pygame
 import numpy as np
 
-def plot_spectrogram(spectrogram, sr, hop_length):
-    plt.figure(figsize=(10, 5))
-    librosa.display.specshow(spectrogram, sr=sr, hop_length=hop_length, x_axis='time', y_axis='log')
-    plt.colorbar(format='%+2.0f dB')
-    plt.title("Spectrogram")
-    plt.show()
+class Visualizer:
+    def __init__(self, width=800, height=400):
+        pygame.init()
+        self.screen = pygame.display.set_mode((width, height))
+        pygame.display.set_caption("Real-Time Visualizer")
+        self.width = width
+        self.height = height
 
-def live_visualizer(audio_data, beat_times):
-    # Implement real-time visualization with pygame or similar tools
-    pass
+    def draw_bars(self, audio_data):
+        """Draw frequency bars based on audio data."""
+        self.screen.fill((0, 0, 0))  # Clear the screen
+        num_bars = len(audio_data)
+        bar_width = self.width // num_bars
+
+        for i in range(num_bars):
+            height = int(audio_data[i] * self.height)  # Scale data to screen height
+            pygame.draw.rect(
+                self.screen,
+                (0, 255, 0),
+                (i * bar_width, self.height - height, bar_width, height)
+            )
+        pygame.display.flip()

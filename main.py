@@ -1,19 +1,32 @@
-from src.audio_analysis import load_audio, get_beats, get_frequency_spectrum
-from src.visualizer import plot_spectrogram
+from src.real_time import RealTimeAudio
+from src.visualizer import Visualizer
+import pygame
+import numpy as np
 
 def main():
-    audio_file = "data/audio/sample.mp3"
-    
-    # Step 1: Load audio
-    y, sr = load_audio(audio_file)
-    
-    # Step 2: Analyze audio
-    tempo, beat_times = get_beats(y, sr)
-    spectrogram = get_frequency_spectrum(y, sr)
-    
-    # Step 3: Visualize
-    print(f"Detected tempo: {tempo} BPM")
-    plot_spectrogram(spectrogram, sr, hop_length=512)
+    # Initialize real-time audio and visualizer
+    visualizer = Visualizer(width=800, height=400)
+    audio = RealTimeAudio(sample_rate=44100, block_size=1024)
+
+    def audio_callback(audio_data):
+        """Callback function to pass audio data to visualizer."""
+        # Normalize audio data for better visuals
+        normalized_data = audio_data / np.max(audio_data)
+        visualizer.draw_bars(normalized_data)
+
+    audio.callback = audio_callback
+    audio.start_stream()
+
+    # Main loop
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+    # Clean up
+    audio.stop_stream()
+    pygame.quit()
 
 if __name__ == "__main__":
     main()

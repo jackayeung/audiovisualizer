@@ -1,8 +1,8 @@
-# Ignore virtual environments
+# Virtual environments
 env/
 venv/
 
-# Byte-compiled files
+# Python bytecode files
 *.pyc
 __pycache__/
 
@@ -13,8 +13,16 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Log files
+# Logs
 *.log
 
-# IDE settings
+# VS Code settings
 .vscode/
+
+# Test coverage files
+htmlcov/
+
+# Distribution files
+dist/
+build/
+*.egg-info/
